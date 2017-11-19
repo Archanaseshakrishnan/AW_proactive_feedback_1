@@ -10,23 +10,49 @@
 	session_start();
 	include 'databaseconnect.php';
 	$username = $_SESSION['username'];
-	echo "<p>I am in intermediate_set</p>";
-	$question = array();
-	$in = 0;
-	$res = mysql_query("SELECT * FROM $username WHERE `Difficulty`='2' AND `Appeared_in_this_test`=0");
-	while($row=mysql_fetch_array($res)){
-		$question[$in]=$row['id'];
-		$in+=1;
-	}
-?>
+	$diffi = $_SESSION['difficulty'];
+	echo "<p>I am in intermediate_set</p>";?>
 	<div class="container question">
 	<p>	Responsive Quiz Application Using PHP, MySQL, jQuery, Ajax and Twitter Bootstrap</p>
-	<form class="form-horizontal" role="form" id='login' method="post" action="result.php">
+	<form class="form-horizontal" role="form" id='login' method="post" action="result_loss_of_touch.php">
 	</div>
+<?php
+	$temp = $diffi-1;
+	$q1 = "SELECT * FROM $username WHERE `Difficulty`= $temp AND `Appeared_in_this_test`='0'";
+	$result = mysql_query($q1);
+	$pref1 = array();
+	$pref1index=0;
+	$pref2 = array();
+	$pref2index=0;
+	
+	$question = array();
+	$index = 0;
+	while($row=mysql_fetch_array($result)){
+		if($row['Total_Correct']==0){
+			$pref1[$pref1index]=$row['id'];
+			$pref1index+=1;
+		}
+		else{
+			$pref2[$pref2index]=$row['id'];
+			$pref2index+=1;
+		}
+	}
+	for(int i=0;i<$pref1index;$i+=1){
+		$t = mt_rand()%count($pref1);
+		$question[$index]=$pref1[$t];
+		$index+=1;
+	}
+	for(int i=0;i<$pref2index;$i+=1){
+		$t = mt_rand()%count($pref2);
+		$question[$index]=$pref2[$t];
+		$index+=1;
+	}
+	
+?>
 <?php
 	$i=0;
 	for($i=0;$i<2;$i+=1){
-		if($i<1){
+		if($i<2-1){
 			$q5 = "SELECT * FROM `questions` WHERE `id` = '$question[$i]'";
 			$result = mysql_fetch_array(mysql_query($q5));
 ?>

@@ -114,7 +114,7 @@
 				$thisques = $row['Question'];
 				mysql_query("UPDATE $username SET `Difficulty`='$diff' WHERE `Question`='$thisques'");
 			}
-			include 'intermediate_set_trial.php';
+			header("Location: intermediate_set_trial.php");
 		}
 	}
 	else{

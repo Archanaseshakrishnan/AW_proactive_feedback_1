@@ -10,7 +10,7 @@
 	session_start();
 	include 'databaseconnect.php';
 	$username = $_SESSION['username'];
-	echo "<p>I am in intermediate_set</p>";
+	echo "<p>I am in advanced set</p>";
 	$question = array();
 	$in = 0;
 	$res = mysql_query("SELECT * FROM $username WHERE `Difficulty`='2' AND `Appeared_in_this_test`=0");
@@ -25,8 +25,8 @@
 	</div>
 <?php
 	$i=0;
-	for($i=0;$i<2;$i+=1){
-		if($i<1){
+	for($i=0;$i<count($question);$i+=1){
+		if($i<count($question)-1){
 			$q5 = "SELECT * FROM `questions` WHERE `id` = '$question[$i]'";
 			$result = mysql_fetch_array(mysql_query($q5));
 ?>

@@ -78,7 +78,20 @@ else{
 		}
 	}
 	else if($level=='3'){
-		header( "Location: advance_set_trial2.php" ) ;
+		$q = "SELECT * FROM $username WHERE `Appeared_in_this_test`='1'";
+		$r = mysql_query($q);
+		if(mysql_num_rows($r)<=7){
+			header( "Location: advanced_set2.php" ) ;
+		}
+		else{
+			$new_set=array();
+			while($row=mysql_fetch_array($r)){
+				array_push($new_set,$row['id']);
+			}
+			restore_table($new_set, $username);
+			header( "Location: analysis.php" ) ;
+			
+		}
 	}
 }
 
@@ -97,10 +110,13 @@ function restore_table($question, $username){
 				$thisques = $result['Question'];
 				if($score<0.3){
 						//update difficulty 
+						
 						$diff = $result['Difficulty'];
+						if($diff<3){
 						$diff+=1;
 						mysql_query("UPDATE `questions` SET `Difficulty`='$diff' WHERE `id`='$q'");
 						mysql_query("UPDATE $username SET `Difficulty`='$diff' WHERE `id`='$q'");
+						}
 				}
 			}
 		}
