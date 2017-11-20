@@ -5,6 +5,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
+<a href="logout.php">Logout</a>
 <?php
 	session_start();
 	include 'databaseconnect.php';
@@ -18,8 +19,9 @@
 	</div>
 <?php
 	$temp = $diffi-1;
-	$q1 = "SELECT * FROM $username WHERE `Difficulty`= $temp";
+	$q1 = "SELECT * FROM $username WHERE `Difficulty`= $temp AND `Appeared_in_this_test`='0'";
 	$result = mysql_query($q1);
+	if(mysql_num_rows($result)>0){
 	$pref1 = array();
 	$pref1index=0;
 	$pref2 = array();
@@ -33,8 +35,8 @@
 			$pref1index+=1;
 		}
 		else{
-			$pref1[$pref1index]=$row['id'];
-			$pref1index+=1;
+			$pref2[$pref2index]=$row['id'];
+			$pref2index+=1;
 		}
 	}
 	if($pref1index!=0){
@@ -50,8 +52,8 @@
 	echo $question[0];
 	$q2 = "SELECT * FROM `questions` WHERE `id`='$question[0]'";
 	$result = mysql_fetch_array(mysql_query($q2));
-	//echo $result['Question'];
-	//echo $result['Option1'];
+	}
+	
 ?>
 <div id='question<?php echo "8";?>' class='cont'>
 <p class='questions' id="qname<?php echo "8";?>"><?php echo "8";?>.<?php echo $result['Question'];?><?php echo $result['id']?></p>

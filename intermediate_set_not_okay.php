@@ -5,6 +5,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
+<a href="logout.php">Logout</a>
 <?php
 //just display the $_SESSION inter_8 and 9
 	session_start();
@@ -37,14 +38,14 @@
 			$pref2index+=1;
 		}
 	}
-	for(int i=0;i<$pref1index;$i+=1){
-		$t = mt_rand()%count($pref1);
-		$question[$index]=$pref1[$t];
+	for($i=0;$i<$pref1index;$i+=1){
+		
+		$question[$index]=$pref1[$i];
 		$index+=1;
 	}
-	for(int i=0;i<$pref2index;$i+=1){
-		$t = mt_rand()%count($pref2);
-		$question[$index]=$pref2[$t];
+	for($i=0;$i<$pref2index;$i+=1){
+		
+		$question[$index]=$pref2[$i];
 		$index+=1;
 	}
 	
@@ -68,6 +69,8 @@
 <?php
 		}
 		else{
+			$q5 = "SELECT * FROM `questions` WHERE `id` = '$question[$i]'";
+			$result = mysql_fetch_array(mysql_query($q5));
 ?>
 	<div id='question<?php echo $i;?>' class='cont'>
 	<p class='questions' id="qname<?php echo $i;?>"><?php echo $i+9?>.<?php echo $result['Question'];?><?php echo $result['id']?></p>

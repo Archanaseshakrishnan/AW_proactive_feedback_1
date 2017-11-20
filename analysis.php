@@ -5,14 +5,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
-<form action="dashboard.php" method="post">;
+<a href="logout.php">Logout</a>
+<form action="dashboard.php" method="post">
 	<button type="submit" name="back">Dashboard</button>
 </form>
 <?php
 //update the strength and weakness and undefined columns
-session_start();
-include 'databaseconnect.php';
-$username = $_SESSION['username'];
 session_start();
 include 'databaseconnect.php';
 $username = $_SESSION['username'];
@@ -25,14 +23,16 @@ while($row = mysql_fetch_array($res)){
 	$category = $row['Category'];
 	$res2 = mysql_query("SELECT * FROM $username WHERE `Category`='$category' AND `Total_Correct`='1'");
 	$total_correct = mysql_num_rows($res2);
-	$percent = ($total_correct/(float)$total_in_this)*100;
-	if($percent >= 60)
+	$percent = ($total_correct/(float)$total_in_this);
+	echo "<p>".$category.": ";
+	echo $percent."</p>";
+	if($percent >= 0.5)
 		$strength .= $category . ",";
-	else if($percent < 60 && $percent >=50){
+	else if($percent ==0.5)
 		$undefined .= $category . ",";
 	else
 		$weakness .= $category . ",";
-	}
+	
 }
 $strength = rtrim($strength, ',');
 $undefined = rtrim($undefined, ',');

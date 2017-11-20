@@ -65,7 +65,17 @@ else{
 		$q = "SELECT * FROM $username WHERE `Appeared_in_this_test`='1'";
 		$r = mysql_query($q);
 		if(mysql_num_rows($r)<=7){
+			$diff2 = $level-1;
+			if(mysql_num_rows(mysql_query("SELECT * FROM $username WHERE `Difficulty`='$diff2'")) >= 3)
 			header( "Location: intermediate_set_trial2.php" ) ;
+			else{
+				$new_set=array();
+				while($row=mysql_fetch_array($r)){
+					array_push($new_set,$row['id']);
+				}
+				restore_table($new_set, $username);
+				header( "Location: analysis.php" ) ;
+			}
 		}
 		else{
 			$new_set=array();
@@ -81,7 +91,17 @@ else{
 		$q = "SELECT * FROM $username WHERE `Appeared_in_this_test`='1'";
 		$r = mysql_query($q);
 		if(mysql_num_rows($r)<=7){
+			$diff2 = $level-1;
+			if(mysql_num_rows(mysql_query("SELECT * FROM $username WHERE `Difficulty`='$diff2'")) >= 3)
 			header( "Location: advanced_set2.php" ) ;
+			else{
+				$new_set=array();
+				while($row=mysql_fetch_array($r)){
+					array_push($new_set,$row['id']);
+				}
+				restore_table($new_set, $username);
+				header( "Location: analysis.php" ) ;
+			}
 		}
 		else{
 			$new_set=array();

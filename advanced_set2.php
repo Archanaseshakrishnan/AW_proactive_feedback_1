@@ -5,6 +5,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
+<a href="logout.php">Logout</a>
 <?php
 	session_start();
 	include 'databaseconnect.php';
@@ -33,8 +34,8 @@
 			$pref1index+=1;
 		}
 		else{
-			$pref1[$pref1index]=$row['id'];
-			$pref1index+=1;
+			$pref2[$pref2index]=$row['id'];
+			$pref2index+=1;
 		}
 	}
 	if($pref1index!=0){

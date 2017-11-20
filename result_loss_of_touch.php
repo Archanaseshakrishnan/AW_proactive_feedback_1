@@ -41,7 +41,7 @@ while($result=mysql_fetch_array($response)){
 		$crt++;
 	}
 }
-
+echo "crt: ".$crt;
 $level = $_SESSION['difficulty'];
 $user_type = $_SESSION['user_type'];
 if($level == $user_type){
@@ -53,11 +53,11 @@ if($level == $user_type){
 		//downgrade user_level
 		$user_type-=1;
 		mysql_query("UPDATE $username SET `Total_Attempts`=0,`Total_Correct`=0");
-		mysql_query("UPDATE `users` SET `User_Type`='$user_type', `Strength`=NULL, `Weakness`=NULL, `Undefined`=NULL");
+		mysql_query("UPDATE `users` SET `User_Type`='$user_type' WHERE `Username`='$username'");
 	}
-	header( "Location: analysis.php" ) ;
+	
 }
-
+header( "Location: analysis.php" );
 function restore_table($question, $username){
 		//iterate through all the questions and then recompute the difficulty
 		//if there is a change then update the user table

@@ -17,6 +17,7 @@ function SignUp($username, $password){
 		echo "Username or password already exists";
 	}
 	else{
+	//CreateTable($username, $password);
 	$q="INSERT INTO `users` (`Username`, `Status`, `Password`, `last_logged_in`, `User_Type`, `Interest`, `Strength`, `Weakness`, `Undefined`) VALUES ('$username', '0', '$password', '$act', '1', NULL, NULL, NULL, NULL)";
 	mysql_query($q);
 	$_SESSION['username'] = $username;
@@ -24,7 +25,7 @@ function SignUp($username, $password){
 	}
 }
 function CreateTable($username, $password){
-	$q = "CREATE TABLE IF NOT EXISTS `$username` (`Category` VARCHAR(500) NOT NULL, `Question` VARCHAR(10000) NOT NULL, `Appeared_in_this_test` INT(11), `Interest` INT(11), `Total_Attempts` INT(11), `Total_Correct` INT(11), `Difficulty` INT(11) NOT NULL)";
+	$q = "CREATE TABLE `$username` (`Category` VARCHAR(500) NOT NULL, `Question` VARCHAR(10000) NOT NULL, `Appeared_in_this_test` INT(11), `Interest` INT(11), `Total_Attempts` INT(11), `Total_Correct` INT(11), `Difficulty` INT(11) NOT NULL, `id` INT(11) NOT NULL AUTO_INCREMENT, CONSTRAINT pk PRIMARY KEY (`id`))";
 	mysql_query($q);
 	
 }

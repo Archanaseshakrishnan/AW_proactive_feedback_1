@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Intermediate_trial</title>
+<title>Advanced_trial</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
+<a href="logout.php">Logout</a>
 <?php
 //just display the $_SESSION inter_8 and 9
 	session_start();
@@ -13,7 +14,7 @@
 	echo "<p>I am in advanced set</p>";
 	$question = array();
 	$in = 0;
-	$res = mysql_query("SELECT * FROM $username WHERE `Difficulty`='2' AND `Appeared_in_this_test`=0");
+	$res = mysql_query("SELECT * FROM $username WHERE `Difficulty`='2' AND `Appeared_in_this_test`='0'");
 	while($row=mysql_fetch_array($res)){
 		$question[$in]=$row['id'];
 		$in+=1;
@@ -25,8 +26,8 @@
 	</div>
 <?php
 	$i=0;
-	for($i=0;$i<count($question);$i+=1){
-		if($i<count($question)-1){
+	for($i=0;$i<2;$i+=1){
+		if($i<1){
 			$q5 = "SELECT * FROM `questions` WHERE `id` = '$question[$i]'";
 			$result = mysql_fetch_array(mysql_query($q5));
 ?>
@@ -42,6 +43,8 @@
 <?php
 		}
 		else{
+			$q5 = "SELECT * FROM `questions` WHERE `id` = '$question[$i]'";
+			$result = mysql_fetch_array(mysql_query($q5));
 ?>
 	<div id='question<?php echo $i;?>' class='cont'>
 	<p class='questions' id="qname<?php echo $i;?>"><?php echo $i+9?>.<?php echo $result['Question'];?><?php echo $result['id']?></p>

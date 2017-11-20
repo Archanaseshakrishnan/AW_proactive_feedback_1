@@ -5,6 +5,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
+<a href="logout.php">Logout</a>
 <?php
 	session_start();
 	include 'databaseconnect.php';
@@ -15,7 +16,10 @@
 	//check User_Type
 	$q1 = "SELECT * FROM `users` WHERE `Username`='$username'";
 	$result = mysql_fetch_array(mysql_query($q1));
-	if($result["User_Type"]!=3){
+	$query = "SELECT `Difficulty`,COUNT(`Difficulty`) AS `counti` FROM $username GROUP BY `Difficulty` HAVING `Difficulty`='2' ";
+	$result2 = mysql_query($query);
+
+	if($result["User_Type"]!=3 || mysql_num_rows($result2)==0){
 		$_SESSION['user_type']=$result['User_Type'];
 		$q1 = "SELECT * FROM `users` WHERE `Username`='$username'";
 		$result = mysql_fetch_array(mysql_query($q1));
@@ -23,6 +27,7 @@
 		$result = mysql_query($query)or die($myQuery."<br/><br/>".mysql_error());
 		$row = mysql_fetch_array( $result);
 		$num_of_rows=$row["counti"];
+		
 		if($num_of_rows>=10){
 			//means there are atleast 10 questions in total in this category
 			$q1 = "SELECT * FROM $username WHERE `Difficulty`='3'";
@@ -62,28 +67,33 @@
 			}
 			if(count($interest)+count($no_interest)+count($others) >= 10 && count($interest)+count($no_interest)>=4){
 				//fine just randomize the questions and ask
+				$cinterest=0;
+				$cno_interest=0;
 				for($i=0;$i<10;$i+=1){
 					$index = mt_rand()%10;
 					//resolving collision
 					while(array_key_exists($index,$questions))
 						$index = ($index+1)%10;
 					//check incase $interest runs out
-					if($i<count($interest)){
-						$t=mt_rand()%$interestindex;
+					if($cinterest<count($interest)){
+						$t=mt_rand()%count($interest);
 						while(in_array($interest[$t],$appearance['interest']))
 						{
-							$t=mt_rand()%$interestindex;
+							$t=mt_rand()%count($interest);
 						}
 						$questions[$index]=$interest[$t];
 						array_push($appearance['interest'],$interest[$t]);
+						$cinterest+=1;
 					}
-					else if($i-count($interest)<count($no_interest)){
+					else if($cno_interest<count($no_interest)){
 						//if interest section is over remaining from no_interest
 						$t=mt_rand()%$no_interestindex;
 						while(in_array($no_interest[$t],$appearance['no_interest'])){
 							$t=mt_rand()%$no_interestindex;
 						}
 						$questions[$index]=$no_interest[$t];
+						array_push($appearance['no_interest'],$no_interest[$t]);
+						$cno_interest+=1;
 					}
 					else{
 						//others
@@ -92,6 +102,7 @@
 							$t=mt_rand()%$others_index;
 						}
 						$questions[$index]=$others[$t];	
+						array_push($appearance['others'],$others[$t]);
 					}
 				}
 				//print_r($questions);
@@ -99,10 +110,15 @@
 			}
 			else
 			{
+				if(num_of_rows>=10){
 				//update User_type and call advanced function
 				$q3 = "UPDATE `users` SET `User_Type` = '4' WHERE `Username`='$username'";
 				mysql_query($q3);
 				header( "Location: expert_set.php" ) ;
+				}
+				else{
+					echo "there is not enough questions in this set";
+				}
 			}
 		}
 		else{
@@ -143,28 +159,33 @@
 						}
 					}
 				}
+				$cinterest=0;
+				$cno_interest=0;
 				for($i=0;$i<count($interest)+count($no_interest)+count($others);$i+=1){
 					$index = mt_rand()%(count($interest)+count($no_interest)+count($others));
 					//resolving collision
 					while(array_key_exists($index,$questions))
 						$index = ($index+1)%count($interest)+count($no_interest)+count($others);
 					//check incase $interest runs out
-					if($i<count($interest)){
-						$t=mt_rand()%$interestindex;
+					if($cinterest<count($interest)){
+						$t=mt_rand()%count($interest);
 						while(in_array($interest[$t],$appearance['interest']))
 						{
-							$t=mt_rand()%$interestindex;
+							$t=mt_rand()%count($interest);
 						}
 						$questions[$index]=$interest[$t];
 						array_push($appearance['interest'],$interest[$t]);
+						$cinterest+=1;
 					}
-					else if($i-count($interest)<count($no_interest)){
+					else if($cno_interest<count($no_interest)){
 						//if interest section is over remaining from no_interest
 						$t=mt_rand()%$no_interestindex;
 						while(in_array($no_interest[$t],$appearance['no_interest'])){
 							$t=mt_rand()%$no_interestindex;
 						}
 						$questions[$index]=$no_interest[$t];
+						array_push($appearance['no_interest'],$no_interest[$t]);
+						$cno_interest+=1;
 					}
 					else{
 						//others
@@ -173,6 +194,7 @@
 							$t=mt_rand()%$others_index;
 						}
 						$questions[$index]=$others[$t];	
+						array_push($appearance['others'],$others[$t]);
 					}
 				}
 				
@@ -231,28 +253,33 @@
 			}
 			if(count($interest)+count($no_interest)+count($others) >= 9 && count($interest)+count($no_interest)>=4){
 				//fine just randomize the questions and ask
+				$cinterest=0;
+				$cno_interest=0;
 				for($i=0;$i<9;$i+=1){
 					$index = mt_rand()%9;
 					//resolving collision
 					while(array_key_exists($index,$questions))
 						$index = ($index+1)%9;
 					//check incase $interest runs out
-					if($i<count($interest)){
-						$t=mt_rand()%$interestindex;
+					if($cinterest<count($interest)){
+						$t=mt_rand()%count($interest);
 						while(in_array($interest[$t],$appearance['interest']))
 						{
-							$t=mt_rand()%$interestindex;
+							$t=mt_rand()%count($interest);
 						}
 						$questions[$index]=$interest[$t];
 						array_push($appearance['interest'],$interest[$t]);
+						$cinterest+=1;
 					}
-					else if($i-count($interest)<count($no_interest)){
+					else if($cno_interest<count($no_interest)){
 						//if interest section is over remaining from no_interest
 						$t=mt_rand()%$no_interestindex;
 						while(in_array($no_interest[$t],$appearance['no_interest'])){
 							$t=mt_rand()%$no_interestindex;
 						}
 						$questions[$index]=$no_interest[$t];
+						array_push($appearance['no_interest'],$no_interest[$t]);
+						$cno_interest+=1;
 					}
 					else{
 						//others
@@ -261,9 +288,10 @@
 							$t=mt_rand()%$others_index;
 						}
 						$questions[$index]=$others[$t];	
+						array_push($appearance['others'],$others[$t]);
 					}
 				}
-				print_r($questions);
+				//print_r($questions);
 				$_SESSION["inter_8_1"]=$questions[7];
 				$_SESSION["inter_9_1"]=$questions[8];
 				
@@ -272,9 +300,9 @@
 			else
 			{
 				//update User_type and call advanced function
-				$q3 = "UPDATE `users` SET `User_Type` = '3' WHERE `Username`='$username'";
+				$q3 = "UPDATE `users` SET `User_Type` = '4' WHERE `Username`='$username'";
 				mysql_query($q3);
-				header( "Location: advance_set.php" ) ;
+				header( "Location: expert.php" ) ;
 			}
 		}
 		else{
@@ -314,28 +342,33 @@
 						}
 					}
 				}
+				$cinterest=0;
+				$cno_interest=0;
 				for($i=0;$i<count($interest)+count($no_interest)+count($others);$i+=1){
 					$index = mt_rand()%(count($interest)+count($no_interest)+count($others));
 					//resolving collision
 					while(array_key_exists($index,$questions))
 						$index = ($index+1)%count($interest)+count($no_interest)+count($others);
 					//check incase $interest runs out
-					if($i<count($interest)){
-						$t=mt_rand()%$interestindex;
+					if($cinterest<count($interest)){
+						$t=mt_rand()%count($interest);
 						while(in_array($interest[$t],$appearance['interest']))
 						{
-							$t=mt_rand()%$interestindex;
+							$t=mt_rand()%count($interest);
 						}
 						$questions[$index]=$interest[$t];
 						array_push($appearance['interest'],$interest[$t]);
+						$cinterest+=1;
 					}
-					else if($i-count($interest)<count($no_interest)){
+					else if($cno_interest<count($no_interest)){
 						//if interest section is over remaining from no_interest
 						$t=mt_rand()%$no_interestindex;
 						while(in_array($no_interest[$t],$appearance['no_interest'])){
 							$t=mt_rand()%$no_interestindex;
 						}
 						$questions[$index]=$no_interest[$t];
+						array_push($appearance['no_interest'],$no_interest[$t]);
+						$cno_interest+=1;
 					}
 					else{
 						//others
@@ -344,6 +377,7 @@
 							$t=mt_rand()%$others_index;
 						}
 						$questions[$index]=$others[$t];	
+						array_push($appearance['others'],$others[$t]);
 					}
 				}
 				
