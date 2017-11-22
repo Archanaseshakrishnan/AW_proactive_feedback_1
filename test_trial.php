@@ -27,7 +27,7 @@
 		}
 		else{
 			//expert
-			//header( "Location: random_set.php" ) ;
+			header( "Location: expert_set.php" ) ;
 		}
 		?>
 </body>

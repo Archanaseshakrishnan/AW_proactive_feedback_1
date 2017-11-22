@@ -14,7 +14,7 @@
 	echo "<p>I am in advanced set</p>";
 	$question = array();
 	$in = 0;
-	$res = mysql_query("SELECT * FROM $username WHERE `Difficulty`='2' AND `Appeared_in_this_test`='0'");
+	$res = mysql_query("SELECT * FROM $username WHERE `Difficulty`='3' AND `Appeared_in_this_test`='0'");
 	while($row=mysql_fetch_array($res)){
 		$question[$in]=$row['id'];
 		$in+=1;
